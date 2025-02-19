@@ -19,39 +19,19 @@ def normalize_column_name(column_name):
 
 # Hàm suy luận kiểu dữ liệu
 def infer_data_type(sample_value, column_name):
-    # Nếu tên cột chứa từ "ngay", suy luận kiểu DATE
     if "ngay" in column_name.lower():
         return "DATE"
-    
-    # Kiểm tra nếu giá trị mẫu là chuỗi "INT"
-    if isinstance(sample_value, str) and sample_value.strip().upper() == "INT":
-        return "INTEGER"
-    
-    # Kiểm tra nếu giá trị mẫu là kiểu datetime
-    if isinstance(sample_value, pd.Timestamp) or isinstance(sample_value, datetime.datetime):
-        return "DATE"
-    
-    # Kiểm tra nếu là số nguyên
     try:
         int(sample_value)
         return "DOUBLE PRECISION"
     except (ValueError, TypeError):
         pass
-
-    # Kiểm tra nếu là số thực
     try:
         float(sample_value)
         return "DOUBLE PRECISION"
     except (ValueError, TypeError):
         pass
-
-    # Kiểm tra nếu là ngày tháng dưới dạng chuỗi
-    if isinstance(sample_value, str) and is_date_format(sample_value):
-        return "DATE"
-
-    # Nếu không khớp bất kỳ điều kiện nào, mặc định là TEXT
     return "TEXT"
-
 
 # Hàm tạo Code CREATE TABLE
 def generate_create_table_sql(data, full_table_name):
