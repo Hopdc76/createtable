@@ -108,8 +108,8 @@ with tab2:
             st.download_button("Tải xuống file SQL", sql_output, sql_file_name, "text/sql")
             
             # Xuất dữ liệu chuẩn hóa sang Excel
+            normalized_columns = [normalize_column_name(col) for col in df["Tên cột"]]
             df_export = pd.DataFrame(columns=["action_type", "id"] + normalized_columns)
-            df_export = pd.DataFrame(columns=normalized_columns)
             output = BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
                 df_export.to_excel(writer, index=False, sheet_name="Converted Data")
