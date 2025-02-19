@@ -80,7 +80,8 @@ with tab1:
             st.code(sql_output, language="sql")
             
             sql_file_name = f"{table_name}.sql"
-            st.download_button("Tải xuống file SQL", sql_output, sql_file_name, "text/sql")
+            st.download_button("Tải xuống file SQL", sql_output, sql_file_name, "text/sql", key="download_sql")
+
             
             # Xuất dữ liệu chuẩn hóa sang Excel
             normalized_columns = [normalize_column_name(col) for col in column_names]
@@ -91,7 +92,8 @@ with tab1:
             output.seek(0)
             
             excel_file_name = f"{table_name}_converted.xlsx"
-            st.download_button("Tải xuống file Excel", output.getvalue(), excel_file_name, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            st.download_button("Tải xuống file Excel", output.getvalue(), excel_file_name, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", key="download_excel")
+
 
 with tab2:
     uploaded_file = st.file_uploader("Tải lên tệp Excel hoặc CSV", type=["xlsx", "csv"])
