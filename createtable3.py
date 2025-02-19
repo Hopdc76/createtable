@@ -26,12 +26,15 @@ def is_date_format(value):
             r'^\d{2}-\d{2}-\d{4}$',          # dd-mm-yyyy
             r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$',  # yyyy-mm-dd hh:mm:ss
             r'^\d{2}/\d{2}/\d{2}$',          # dd/mm/yy
-            r'^\d{2}-\d{2}-\d{2}$'           # dd-mm-yy
+            r'^\d{2}-\d{2}-\d{2}$',          # dd-mm-yy
+            r'^\d{4}/\d{2}/\d{2}$',          # yyyy/mm/dd
+            r'^\d{4}-\d{2}-\d{2}$'           # yyyy-mm-dd
         ]
         for pattern in date_patterns:
             if re.match(pattern, value):
                 return True
     return False
+
 
 # Hàm suy luận kiểu dữ liệu
 def infer_data_type(sample_value, column_name):
