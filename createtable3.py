@@ -84,14 +84,14 @@ with tab1:
             
             # Xuất dữ liệu chuẩn hóa sang Excel
             normalized_columns = [normalize_column_name(col) for col in column_names]
-            df_export = pd.DataFrame([normalized_columns], columns=normalized_columns)
+            df_export = pd.DataFrame(columns=normalized_columns)
             output = BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
                 df_export.to_excel(writer, index=False, sheet_name="Converted Data")
             output.seek(0)
             
             excel_file_name = f"{table_name}_converted.xlsx"
-            st.download_button("Tải xuống file Excel", output, excel_file_name, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            st.download_button("Tải xuống file Excel", output.getvalue(), excel_file_name, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
 with tab2:
     uploaded_file = st.file_uploader("Tải lên tệp Excel hoặc CSV", type=["xlsx", "csv"])
@@ -109,13 +109,13 @@ with tab2:
             
             # Xuất dữ liệu chuẩn hóa sang Excel
             normalized_columns = [normalize_column_name(col) for col in df["Tên cột"]]
-            df_export = pd.DataFrame([normalized_columns], columns=normalized_columns)
+            df_export = pd.DataFrame(columns=normalized_columns)
             output = BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
                 df_export.to_excel(writer, index=False, sheet_name="Converted Data")
             output.seek(0)
             
             excel_file_name = f"{table_name}_converted.xlsx"
-            st.download_button("Tải xuống file Excel", output, excel_file_name, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            st.download_button("Tải xuống file Excel", output.getvalue(), excel_file_name, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         else:
             st.error("Tệp không hợp lệ. Định dạng phải có ít nhất 2 cột: 'Tên cột' và 'Giá trị mẫu'.")
