@@ -82,8 +82,33 @@ with tab1:
             sql_file_name = f"{table_name}.sql"
             st.download_button("Tải xuống file SQL", sql_output, sql_file_name, "text/sql")
             
-            # Xuất dữ liệu chuẩn hóa sang Excel với 2 cột mặc định
-            normalized_columns = ["action_type", "id"] + [normalize_column_name(col) for col in column_names]
+            # Xuất dữ liệu chuẩn hóa sang Excel
+            normalized_columns = [normalize_column_name(col) for col in column_names]
+            df_export = pd.DataFrame(columns=["action_type", "id"] + normalized_columns)
+            output = BytesIO()
+            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+                df_export.to_excel(writer, index=False, sheet_name="Converted Data")
+            output.seek(0)
+            
+            excel_file_name = f"{table_name}_converted.xlsx"
+            st.download_button("Tải xuống file Excel", output.getvalue(), excel_file_name, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+with tab2:
+    uploaded_file = st.file_uploader("Tải lên tệp Excel hoặc CSV", type=["xlsx", "csv"])
+    if uploaded_file is not None:
+        df = pd.read_csv(uploaded_file) if uploaded_file.name.endswith(".csv") else pd.read_excel(uploaded_file)
+        if df.shape[1] >= 2:
+            df.columns = ["Tên cột", "Giá trị mẫu"]
+            data = df.to_dict(orient="records")
+            sql_output = generate_create_table_sql(data, full_table_name)
+            st.subheader("Code SQL CREATE TABLE:")
+            st.code(sql_output, language="sql")
+            
+            sql_file_name = f"{table_name}.sql"
+            st.download_button("Tải xuống file SQL", sql_output, sql_file_name, "text/sql")
+            
+            # Xuất dữ liệu chuẩn hóa sang Excel
+            df_export = pd.DataFrame(columns=["action_type", "id"] + normalized_columns)
             df_export = pd.DataFrame(columns=normalized_columns)
             output = BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
@@ -92,3 +117,5 @@ with tab1:
             
             excel_file_name = f"{table_name}_converted.xlsx"
             st.download_button("Tải xuống file Excel", output.getvalue(), excel_file_name, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        else:
+            st.error("Tệp không hợp lệ. Định dạng phải có ít nhất 2 cột: 'Tên cột' và 'Giá trị mẫu'.")
